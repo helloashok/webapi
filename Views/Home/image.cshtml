@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "image";
+}
+
+<h2>image</h2>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<h2>fileupload</h2>
+<div>
+
+    <div class="form-group">
+        <input type="file" id="myfile" />
+    </div>
+    <input id="btn1" class="btn btn-default" type="button" value="Upload" />
+</div>
+
+
+<
+<script >
+
+
+
+            jQuery(Document).ready(function () {
+                jQuery('#btn1').click(function () {
+                    if ($('#myfile').val() == '') {
+                        alert('Please select file');
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    var username = '00abcdef';
+                   
+                    var file = $('#myfile')[0];
+                    
+               //j garyau timle jquery ma tyo nai garni ho Ionic bata pani.
+                    //now, You should look to post uploaded image to FB.
+                    //from imageController.cs
+                    //dai hamile username chai photokoname banayera pathayo vane hunxa?
+                    //pickup the call . viber cha?
+                    //chaina dai . Kina outdated ho timi. Technical field ko manche sanga maile sodhda
+                    //kehi chaina bhanchau? Change garnu paryo attitude.calling in fb hai
+                    //ma yeta bata garchu dai ok
+                   
+                    formData.append('file', file.files[0]);
+                    formData.append('username',username );
+                 
+                  
+                    jQuery.ajax({
+                        url: '/api/image',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (d) {
+                            alert('file is uploaded successfully')
+                        },
+                        error: function () {
+                            alert('Some thing went wrong');
+                        }
+                    });
+                });
+            });
+</script>
+
