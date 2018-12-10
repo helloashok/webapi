@@ -20,7 +20,8 @@ namespace WebApplication9.Controllers
     public class ImageController : ApiController
     {
         public string path;
-      
+
+
         public Task<HttpResponseMessage> Post()
         {
             List<string> savedFilePath = new List<string>();
@@ -29,146 +30,120 @@ namespace WebApplication9.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
-            
+
             String username = HttpContext.Current.Request.Form["username"];
-          string rootPath = HttpContext.Current.Server.MapPath("~/App_Data/image/");
-            // this is added line
-            var provider = new MultipartFileStreamProvider(rootPath);
-            //add a try catch block while storing image in a folder 
-            //filename = filename_TimeStamp. DateTime.Now.Timespan
-            //exception return null or some error message
-            //if no exception save to db  if no excetion then post to fb
+            String email = HttpContext.Current.Request.Form["email"];
+            var applicationPath = AppDomain.CurrentDomain.BaseDirectory;
+
+               System.IO.Directory.CreateDirectory(string.Concat(applicationPath,@"App_Data/image/",username));
             
+            
+           
+
+
+            string rootPath = HttpContext.Current.Server.MapPath(string.Concat("~/App_Data/image/", username));
+           
+            var provider = new MultipartFileStreamProvider(rootPath);
+
+
             var task = Request.Content.ReadAsMultipartAsync(provider).
                 ContinueWith<HttpResponseMessage>(t =>
                 {
-                if (t.IsCanceled || t.IsFaulted)
-                {
-                    Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
-                }
-                
-                foreach (MultipartFileData dataitem in provider.FileData)
-                {
-                  
-                    try
-                    {  /*  if(!Directory.Info("~/App-Data/image/")
-                                   {
-                                   Directory.
-                               }
-                               String dirpath = HttpContext.Current.Server.MapPath("~/App_Data/image/" + nothing);*/
+                    if (t.IsCanceled || t.IsFaulted)
+                    {
+                        Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
+                    }
 
+                    foreach (MultipartFileData dataitem in provider.FileData)
+                    {
+
+                        try
+                        {
 
 
                             string name = dataitem.Headers.ContentDisposition.FileName.Replace("\"", "");
-                        
 
-                            string newFileName = Guid.NewGuid()+ Path.GetExtension(name);
-                            
 
-                            File.Move(dataitem.LocalFileName, Path.Combine(rootPath,newFileName));
-                          
+                            string newFileName =string.Concat(username,"_" ,Guid.NewGuid()) + Path.GetExtension(name);
 
-                           path = Path.Combine(rootPath, newFileName);
-                           
-                          //  int id = (int)Convert.ToInt64(Guid.NewGuid());
-                            
 
-                            
-                            string connetionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\rajan\\Documents\\Database1.mdf;Integrated Security=True;Connect Timeout=3";
-                            try
-                            {
-                                SqlConnection connection;
+                            File.Move(dataitem.LocalFileName, Path.Combine(rootPath, newFileName));
+
+
+                            path = Path.Combine(rootPath, newFileName);
+
+                            //  int id = (int)Convert.ToInt64(Guid.NewGuid());
 
 
 
-                                connection = new SqlConnection(connetionString);
-
-                                connection.Open();
-
-                                System.Diagnostics.Debug.WriteLine("connection started");
 
 
-                                String query = "Select Count(*) from userinformation where username='"+username+"'";
-
-                                SqlCommand cmd = new SqlCommand(query, connection);
-                                
-                                Int32 count = (Int32)cmd.ExecuteScalar();
-                                connection.Close();
-
-                                System.Diagnostics.Debug.WriteLine(username, "the same value is printed here");
-
-                                if (count == 0)
-                                {
-
-                                    try
-                                    {
-                                        connection.Open();
-                                        System.Diagnostics.Debug.WriteLine("username doesnot  exist");
-                                        String queryforinsert = "Insert into userinformation(username,filepath) Values (@username,@filepath)";
-                                        SqlCommand cmdforinsert = new SqlCommand(queryforinsert, connection);
-                                        System.Diagnostics.Debug.WriteLine("starting the insertion");
-
-                                        cmdforinsert.Parameters.AddWithValue("@username", username);
-                                        cmdforinsert.Parameters.AddWithValue("@filepath", path);
-                                        cmdforinsert.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException E)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine(E);
-                                    }
-
-                                }
-
-
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine("this username  exist in database");
-
-                                    connection.Open();
-                                    try
-                                    {
-                                        String querysecond = "UPDATE userinformation SET filepath = '" + path + "' WHERE username= '" + username + "' ";
-                                        SqlCommand cmdsecond = new SqlCommand(querysecond, connection);
-
-
-                                        System.Diagnostics.Debug.WriteLine("the query is executed");
-
-
-                                        cmdsecond.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException e)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine(e);
-                                    }
-                                }
-                            }
-                            catch(SqlException e)
-                            {
-                                System.Diagnostics.Debug.WriteLine(e);
-                            }
-                            }
-                        catch (Exception ex)
-                        {
-                            string message = ex.Message;
                         }
+                        catch(Exception ex)
+                        {
+                            var x = ex;
+                        }
+
+
+
                     }
-
-
-
-
-
-
-                //    GetToken();
                     return Request.CreateResponse(HttpStatusCode.Created, savedFilePath);
-                    
                 });
-          
+
+
             return task;
-        } 
-        public IHttpActionResult GetAccessCode()
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*  public  async Task<HttpResponseMessage> Post()
+          {
+
+              return await GetAccessCode(); 
+          }*/
+        public async Task<HttpResponseMessage> GetAccessCode()
         {
-            {
-                var fb = new FacebookClient();
+            try
+            {  var fb = new FacebookClient();
                 var loginUrl = fb.GetLoginUrl(new
                 {
                     client_id = "415547075642876",
@@ -179,34 +154,75 @@ namespace WebApplication9.Controllers
                     response_type = "code",
                     scope = "email,manage_pages,publish_pages" // Add other permissions as needed
                 });
-
-                return null;
-
+                
             }
+            catch (Exception ex)
+            {
+                var a = ex;
+            }
+
+
+            return  null;
+         
             
         }
-        public Uri GetToken(String code)
+        public IHttpActionResult GetCode(String code)
         {
             var fb = new FacebookClient();
             dynamic result = fb.Post("oauth/access_token", new
             {
                 client_id = "415547075642876",
                 client_secret = "ab7b6d89df67c7ee5b5df7de14b0f241",
-                redirect_uri = "http://localhost:50186/api/Image/GetToken",
+                redirect_uri = "http://localhost:50186/api/Image/GetCode",
                 code = code
             });
+            String token = result.access_token;
+
+
+            GetToken(token);
+
+
             return null;
 
         }
+        public IHttpActionResult GetToken(String token)
+        {
+            
+            var client = new FacebookClient(token);
+
+            dynamic pagetoken=client.Get("336107027195328?fields=access_token");
+            var pageaccesstoken = pagetoken;
+            string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(pageaccesstoken);
 
 
+            var abc = JObject.Parse(jsonString)["access_token"];
+            String patoken = abc.ToString();
+           
+            var clientpost = new FacebookClient(patoken);
 
+            byte[] imageArray = System.IO.File.ReadAllBytes(@"C:\Users\rajan\source\repos\WebApplication9\WebApplication9\App_Data\image\00f3a6c4-c5e4-4918-b32b-39f06779e875.jpg");
 
+            dynamic parameters = new System.Dynamic.ExpandoObject();
+            parameters.source = new FacebookMediaObject
+            {
+                ContentType = "image",
+                FileName = "abc"
+            }.SetValue(imageArray);
 
+            dynamic poosting = clientpost.Post("/336107027195328/photos", parameters);
 
-
+            return null;
 
         }
+        
+
+
+
+
+
+
+
+    }
   
 
 }

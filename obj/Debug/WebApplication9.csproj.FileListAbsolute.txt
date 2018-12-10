@@ -121,7 +121,6 @@ C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Microsoft.AI.Dep
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Microsoft.AI.Web.xml
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\rajan\source\repos\WebApplication9\WebApplication9\obj\Debug\WebApplication9.csprojAssemblyReference.cache
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\obj\Debug\WebApplication9.csproj.CoreCompileInputs.cache
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\obj\Debug\WebApplication9.csproj.CopyComplete
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\obj\Debug\WebApplication9.dll
@@ -130,3 +129,4 @@ C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Facebook.dll
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\Facebook.xml
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\System.Web.Http.Tracing.dll
 C:\Users\rajan\source\repos\WebApplication9\WebApplication9\bin\System.Web.Http.Tracing.xml
+C:\Users\rajan\source\repos\WebApplication9\WebApplication9\obj\Debug\WebApplication9.csprojAssemblyReference.cache

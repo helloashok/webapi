@@ -51,7 +51,7 @@ namespace WebApplication9.Controllers
                 client_id = "415547075642876",
                 client_secret = "ab7b6d89df67c7ee5b5df7de14b0f241",
                 //redirect_uri = RedirectUri.AbsoluteUri,
-                redirect_uri=  "http://localhost:50186/api/Image/GetToken",
+                redirect_uri=  "http://localhost:50186/api/Image/GetCode",
                // RedirectUri.AbsoluteUri,       
                 response_type = "code",
                 scope = "email,manage_pages,publish_pages" // Add other permissions as needed
@@ -76,24 +76,18 @@ namespace WebApplication9.Controllers
 
 
             var client = new FacebookClient(accessToken);
-
-             dynamic token = client.Get("336107027195328?fields=access_token");
+dynamic token = client.Get("336107027195328?fields=access_token");
             var pageaccesstoken = token;
 
-
+            //separating the access token from id 
             string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(pageaccesstoken);
           
-
        var abc=    JObject.Parse(jsonString)["access_token"];
             String pagetoken = abc.ToString();
             ViewBag.token = pagetoken;
 
               var clientpost = new FacebookClient(pagetoken);
-       
-
-
-
-
+      
             byte[] imageArray = System.IO.File.ReadAllBytes(@"C:\Users\rajan\source\repos\WebApplication9\WebApplication9\App_Data\image\370144f6-38c7-482c-93b9-c5b172515757.png");
 
             dynamic parameters = new System.Dynamic.ExpandoObject();
@@ -102,22 +96,9 @@ namespace WebApplication9.Controllers
                 ContentType="image",
                 FileName="abc"
             }.SetValue(imageArray);
+ dynamic posting = clientpost.Post("/336107027195328/photos", parameters);
 
-
-
-
-            dynamic poosting = clientpost.Post("/336107027195328/photos", parameters);
-
-
-
-
-
-
-
-
-
-
-            return View("getfacebooktoken");
+ return View("getfacebooktoken");
 
         }
     }
